@@ -1,0 +1,14 @@
+--- pexpect.py	2013-08-07 14:35:50.299304418 -0700
++++ silent-pexpect.py	2013-08-07 14:38:52.719307257 -0700
+@@ -236,7 +236,11 @@
+             else: # child.after may have been a TIMEOUT or EOF, so don't cat those.
+                 child_result_list.append(child.before)
+             if type(responses[index]) in types.StringTypes:
++                #### CUSTOM CODE TO SILENCE PEXPECT INPUT ####
++                child.logfile = None
+                 child.send(responses[index])
++                child.logfile = logfile
++                #### CUSTOM CODE END ####
+             elif type(responses[index]) is types.FunctionType:
+                 callback_result = responses[index](locals())
+                 sys.stdout.flush()

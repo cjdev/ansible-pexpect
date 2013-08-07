@@ -18,3 +18,5 @@ Third party requirements:
   - python
   - pexpect
   - ansible
+
+You can also apply the patch file to your install of pexpect in order to silent expect input (like passwords)
