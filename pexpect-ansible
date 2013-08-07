@@ -11,13 +11,16 @@ def pexpect_playbook(username, password, args=[]):
     # ansible-playbook <args...> -u <user> -kK
     ANSIBLE_PLAYBOOK_PATH = getoutput('which ansible')
 
-    command = "%s %s -u %s -kK" % (ANSIBLE_PLAYBOOK_PATH, ' '.join(args), username)
+    command = "%s %s -u %s -k" % (ANSIBLE_PLAYBOOK_PATH, ' '.join(args), username)
+
+    if '-U' in args:
+        command = "%s -K" % command
 
     # keys are "expected events" and values are strings to send
     events = {
-        "SSH password:": "%s\\n" % password,
-        "sudo password [defaults to SSH password]:": "%s\\n" % password,
-        "Are you sure you want to continue connecting (yes/no)?": "yes\\n"
+        "SSH password:": "%s\n" % password,
+        "sudo password [defaults to SSH password]:": "%s\n" % password,
+        "Are you sure you want to continue connecting (yes/no)?": "yes\n"
     }
 
     # environment variables for the ansible subproc
