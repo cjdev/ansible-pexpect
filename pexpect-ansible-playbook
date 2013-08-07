@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+
+from os.path import expanduser
+from commands import getoutput
+import sys
+import pexpect
+
+def pexpect_playbook(username, password, args=[]):
+    """Run a playbook through expect given a username, password, and arg array"""
+
+    # ansible-playbook <args...> -u <user> -kK
+    ANSIBLE_PLAYBOOK_PATH = getoutput('which ansible-playbook')
+
+    command = "%s %s -u %s -kK" % (ANSIBLE_PLAYBOOK_PATH, ' '.join(args), username)
+
+    # keys are "expected events" and values are lines to send
+    events = {
+        "SSH password:": password,
+        "sudo password [defaults to SSH password]:": password
+    }
+
+    # environment variables for the ansible subproc
+    env = {
+        "ANSIBLE_NOCOLOR": "True"
+    }
+
+    return pexpect.run(command, events=events, env=env, logfile=sys.stdout, timeout=360, withexitstatus=True)
+
+def restore_quotes(arg):
+    """sys.argv removes quotes, lets restore them"""
+    if arg.startswith("-"):
+        return arg
+    else:
+        return "'%s'" % arg
+
+def get_auth():
+    with open(expanduser("~/.ansible-ssh-auth")) as f:
+        return map(lambda x: x.strip(), f.readlines()[:2])
+
+def run(args):
+    (USER, PASSWORD) = get_auth()
+    return pexpect_playbook(USER, PASSWORD, map(restore_quotes, args))
+
+if __name__ == "__main__":
+    (output, exitcode) = run(sys.argv[1:])
+    sys.exit(exitcode)
