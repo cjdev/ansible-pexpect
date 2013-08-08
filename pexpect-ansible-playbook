@@ -11,10 +11,7 @@ def pexpect_playbook(username, password, args=[]):
     # ansible-playbook <args...> -u <user> -kK
     ANSIBLE_PLAYBOOK_PATH = getoutput('which ansible-playbook')
 
-    command = "%s %s -u %s -k" % (ANSIBLE_PLAYBOOK_PATH, ' '.join(args), username)
-
-    if '-U' in args:
-        command = "%s -K" % command
+    command = "%s %s -u %s -kK" % (ANSIBLE_PLAYBOOK_PATH, ' '.join(args), username)
 
     # keys are "expected events" and values are strings to send
     events = {
