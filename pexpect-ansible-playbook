@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from os.path import expanduser
+from os import environ
 from commands import getoutput
 import sys
 import pexpect
@@ -21,7 +22,8 @@ def pexpect_playbook(username, password, args=[]):
 
     # environment variables for the ansible subproc
     env = {
-        "ANSIBLE_NOCOLOR": "True"
+        "ANSIBLE_NOCOLOR": "True",
+        "PATH": environ.get("PATH")
     }
 
     return pexpect.run(command, events=events, env=env, logfile=sys.stdout, timeout=360, withexitstatus=True)
