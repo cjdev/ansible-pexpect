@@ -19,6 +19,6 @@ Third party requirements:
   - pexpect
   - ansible
 
-You can also apply the patch file to your install of pexpect in order to silent expect input (like passwords)
+You can also apply the patch file to your install of pexpect in order to silence expect input (like passwords)
 
 The patchfile currently only works against pexpect 2.4 (3.x support pending)

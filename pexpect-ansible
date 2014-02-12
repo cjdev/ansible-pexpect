@@ -24,10 +24,8 @@ def pexpect_playbook(username, password, args=[]):
     }
 
     # environment variables for the ansible subproc
-    env = {
-        "ANSIBLE_NOCOLOR": "True",
-        "PATH": environ.get("PATH")
-    }
+    env = vars(environ).get('data')
+    env["ANSIBLE_NOCOLOR"] = "True"
 
     return pexpect.run(command, events=events, env=env, logfile=sys.stdout, timeout=360, withexitstatus=True)
 
