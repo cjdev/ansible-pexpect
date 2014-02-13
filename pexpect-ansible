@@ -40,7 +40,7 @@ def get_auth():
     username = environ.get("SSH_USERNAME", None)
     password = environ.get("SSH_PASSWORD", None)
     if username and password:
-        return [user, password]
+        return [username, password]
     with open(expanduser("~/.ansible-ssh-auth")) as f:
         return map(lambda x: x.strip(), f.readlines()[:2])
 
@@ -50,4 +50,6 @@ def run(args):
 
 if __name__ == "__main__":
     (output, exitcode) = run(sys.argv[1:])
+    if "FATAL" in output:
+        sys.exit(1)
     sys.exit(exitcode)
