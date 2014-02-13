@@ -34,6 +34,10 @@ def restore_quotes(arg):
         return "'%s'" % arg
 
 def get_auth():
+    username = environ.get("SSH_USERNAME", None)
+    password = environ.get("SSH_PASSWORD", None)
+    if username and password:
+        return [user, password]
     with open(expanduser("~/.ansible-ssh-auth")) as f:
         return map(lambda x: x.strip(), f.readlines()[:2])
 

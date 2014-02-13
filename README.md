@@ -13,6 +13,8 @@ username
 password
 ```
 
+It can also read the credentials from the environment variables `SSH_USERNAME` and `SSH_PASSWORD`
+
 Third party requirements:
 
   - python
