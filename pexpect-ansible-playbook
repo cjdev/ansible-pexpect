@@ -17,7 +17,7 @@ def pexpect_playbook(username, password, args=[]):
     # keys are "expected events" and values are strings to send
     events = {
         "SSH password:": "%s\n" % password,
-        "sudo password \[defaults to SSH password\]:": "%s\n" % password
+        "SUDO password\[defaults to SSH password\]:": "%s\n" % password
     }
 
     # environment variables for the ansible subproc
