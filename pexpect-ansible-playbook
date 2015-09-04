@@ -24,7 +24,7 @@ def pexpect_playbook(username, password, args=[]):
     env = vars(environ).get('data')
     env["ANSIBLE_NOCOLOR"] = "True"
 
-    return pexpect.run(command, events=events, env=env, logfile=sys.stdout, timeout=360, withexitstatus=True)
+    return pexpect.run(command, events=events, env=env, logfile=sys.stdout, timeout=1200, withexitstatus=True)
 
 def restore_quotes(arg):
     """sys.argv removes quotes, lets restore them"""
