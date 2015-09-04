@@ -6,7 +6,7 @@ from commands import getoutput
 import sys
 import pexpect
 
-def pexpect_playbook(username, password, args=[]):
+def pexpect_playbook(username, password, timeout, args=[]):
     """Run a playbook through expect given a username, password, and arg array"""
 
     # ansible-playbook <args...> -u <user> -kK
@@ -24,7 +24,7 @@ def pexpect_playbook(username, password, args=[]):
     env = vars(environ).get('data')
     env["ANSIBLE_NOCOLOR"] = "True"
 
-    return pexpect.run(command, events=events, env=env, logfile=sys.stdout, timeout=1200, withexitstatus=True)
+    return pexpect.run(command, events=events, env=env, logfile=sys.stdout, timeout=timeout, withexitstatus=True)
 
 def restore_quotes(arg):
     """sys.argv removes quotes, lets restore them"""
@@ -43,7 +43,16 @@ def get_auth():
 
 def run(args):
     (USER, PASSWORD) = get_auth()
-    return pexpect_playbook(USER, PASSWORD, map(restore_quotes, args))
+
+    expectTimeout = filter(lambda arg: arg.startswith('--expect-timeout'), args)
+    timeout = 360
+    if (expectTimeout):
+        argStr = expectTimeout[0]
+        timeoutStr = argStr[(argStr.index('=')+1):]
+        timeout = int(timeoutStr)
+
+    playbook_args = filter(lambda arg: not arg.startswith('--expect-timeout'), args)
+    return pexpect_playbook(USER, PASSWORD, timeout, map(restore_quotes, playbook_args))
 
 if __name__ == "__main__":
     (output, exitcode) = run(sys.argv[1:])
